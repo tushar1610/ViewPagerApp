@@ -17,10 +17,11 @@ public class MainActivity extends AppCompatActivity {
 
     ViewPager2 vPager;
     ArrayList<String> number = new ArrayList<>();
+    ArrayList<DisplayMetrics> metricsList = new ArrayList<>();
     ViewPagerAdapter mAdapter;
     int numberOfPage = 0;
+    DisplayMetrics metrics;
     TextView textView;
-    private PaintView paintView;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -35,10 +36,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         vPager = findViewById(R.id.pager);
         textView = findViewById(R.id.textAt0);
-        paintView = (PaintView) findViewById(R.id.paintView);
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        paintView.init(metrics);
     }
 
     @Override
@@ -54,29 +51,24 @@ public class MainActivity extends AppCompatActivity {
             }
             numberOfPage++;
             number.add(String.valueOf(numberOfPage));
-            mAdapter = new ViewPagerAdapter(number);
+            metrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            metricsList.add(metrics);
+            mAdapter = new ViewPagerAdapter(number, metricsList);
             vPager.setAdapter(mAdapter);
             return true;
         } else if (id == R.id.remove_page){
             if (numberOfPage > 0) {
                 number.remove(String.valueOf(numberOfPage));
                 numberOfPage--;
-                mAdapter = new ViewPagerAdapter(number);
+                metricsList.remove(metrics);
+                mAdapter = new ViewPagerAdapter(number, metricsList);
                 vPager.setAdapter(mAdapter);
             }
             if (numberOfPage == 0){
                 textView.setVisibility(View.VISIBLE);
                 Toast.makeText(MainActivity.this, "Number of pages are 0. Add a page.", Toast.LENGTH_SHORT).show();
             }
-            return true;
-        } else if (id == R.id.normal){
-            paintView.normal();
-            return true;
-        } else if (id == R.id.emboss){
-            paintView.emboss();
-            return true;
-        } else if (id == R.id.clear){
-            paintView.clear();
             return true;
         }
         return super.onOptionsItemSelected(item);

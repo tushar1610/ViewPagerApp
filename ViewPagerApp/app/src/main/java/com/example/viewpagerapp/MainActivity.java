@@ -8,8 +8,12 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
 
@@ -20,8 +24,10 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<DisplayMetrics> metricsList = new ArrayList<>();
     ViewPagerAdapter mAdapter;
     int numberOfPage = 0;
+//    int currentPage;
     DisplayMetrics metrics;
     TextView textView;
+//    Button nextPage, prevPage;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -36,6 +42,24 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         vPager = findViewById(R.id.pager);
         textView = findViewById(R.id.textAt0);
+//        nextPage = findViewById(R.id.next_page);
+//        prevPage = findViewById(R.id.previous_page);
+        vPager.setUserInputEnabled(false);
+
+//        nextPage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                currentPage = vPager.getCurrentItem();
+//                vPager.setCurrentItem(currentPage+1, true);
+//            }
+//        });
+//        prevPage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                currentPage = vPager.getCurrentItem();
+//                vPager.setCurrentItem(currentPage-1, true);
+//            }
+//        });
     }
 
     @Override
@@ -54,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
             metrics = new DisplayMetrics();
             getWindowManager().getDefaultDisplay().getMetrics(metrics);
             metricsList.add(metrics);
-            mAdapter = new ViewPagerAdapter(number, metricsList);
+            mAdapter = new ViewPagerAdapter(number, metricsList,vPager);
             vPager.setAdapter(mAdapter);
             return true;
         } else if (id == R.id.remove_page){
@@ -62,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 number.remove(String.valueOf(numberOfPage));
                 numberOfPage--;
                 metricsList.remove(metrics);
-                mAdapter = new ViewPagerAdapter(number, metricsList);
+                mAdapter = new ViewPagerAdapter(number, metricsList, vPager);
                 vPager.setAdapter(mAdapter);
             }
             if (numberOfPage == 0){
